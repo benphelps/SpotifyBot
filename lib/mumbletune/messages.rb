@@ -28,7 +28,17 @@ module Mumbletune
 							message.argument = message.words[1...message.words.length-1].join(" ")
 						else
 							play_now = false
-						end
+            end
+
+            collection = nil
+
+            Thread.new {
+              sleep 5
+              unless collection != nil # Check if collection was ever set
+                message.respond_all("Something went wrong! Restarting bot!")
+                exit!
+              end
+            }
 
 						collection = Mumbletune.resolve(message.argument)
 
@@ -37,14 +47,6 @@ module Mumbletune
 
 						# associate the collection with a user
 						collection.user = message.sender.name
-
-            Thread.new {
-              sleep 1
-              unless Mumbletune.player.playing?
-                message.respond_all("Something went wrong! Restarting bot!")
-                exit!
-              end
-            }
 
 						# add these tracks to the queue
 						Mumbletune.player.add_collection collection, (play_now) ? true : false
@@ -134,7 +136,8 @@ module Mumbletune
 					rendered = Mustache.render Message.template[:commands]
 					message.respond rendered
 
-        when /^itsfucked$/i
+          when /^itsfucked$/i
+            puts "Force killed by #{message.sender.name}"
           exit!
 
 				else # Unknown command was given.
