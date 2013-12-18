@@ -16,6 +16,8 @@ module Mumbletune
 		def self.parse(client, data)
 			message = Message.new(client, data)
 
+			message.text = message.text.gsub(/<p>/, "").gsub(/<\/p>/, "")
+
 			begin
 				case message.text
 
@@ -27,7 +29,7 @@ module Mumbletune
 						else
 							play_now = false
 						end
-						
+
 						collection = Mumbletune.resolve(message.argument)
 
 						# handle unknown argument
@@ -35,6 +37,14 @@ module Mumbletune
 
 						# associate the collection with a user
 						collection.user = message.sender.name
+
+            Thread.new {
+              sleep 1
+              unless Mumbletune.player.playing?
+                message.respond_all("Something went wrong! Restarting bot!")
+                exit!
+              end
+            }
 
 						# add these tracks to the queue
 						Mumbletune.player.add_collection collection, (play_now) ? true : false
@@ -44,7 +54,7 @@ module Mumbletune
 						else
 							message.respond_all "#{message.sender.name} added #{collection.description} to the queue."
 						end
-						
+
 					else # user wants to unpause
 						if Mumbletune.player.paused?
 							Mumbletune.player.play
@@ -85,7 +95,7 @@ module Mumbletune
 					removed = Mumbletune.player.undo
 					if message.sender.name == removed.user
 						message.respond_all "#{message.sender.name} removed #{removed.description}."
-					else 
+					else
 						message.respond_all "#{message.sender.name} removed #{removed.description} at #{removed.user} added."
 					end
 
@@ -112,7 +122,10 @@ module Mumbletune
 				when /^volume/i
 					if message.argument.length == 0
 						message.respond "The volume is #{Mumbletune.mumble.volume}."
-					else
+          else
+            if Integer(message.argument) > 100
+              message.argument = "100"
+            end
 						Mumbletune.mumble.volume = message.argument
 						message.respond "Now the volume is #{Mumbletune.mumble.volume}."
 					end
@@ -120,6 +133,9 @@ module Mumbletune
 				when /^help$/i
 					rendered = Mustache.render Message.template[:commands]
 					message.respond rendered
+
+        when /^itsfucked$/i
+          exit!
 
 				else # Unknown command was given.
 					rendered = Mustache.render Message.template[:commands],
