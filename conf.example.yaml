@@ -12,3 +12,7 @@ mumble:
 player:
         default_volume: 60
         tracks_for_artist: 5
+certificate: # Options for generating Mumble certificate
+        country_code: "AU"
+        organisation: "organisation"
+        organisation_unit: "software"
