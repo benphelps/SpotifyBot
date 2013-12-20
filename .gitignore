@@ -25,3 +25,5 @@ tmp/
 .idea/.*
 .idea/*.xml
 .idea/scopes/*.xml
+.idea/inspectionProfiles/*.xml
+.idea/dictionaries/*.xml
