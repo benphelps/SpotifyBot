@@ -16,7 +16,7 @@ module Mumbletune
     def self.parse(client, data)
       message = Message.new(client, data)
 
-      message.text = message.text.gsub(/<p>/, "").gsub(/<\/p>/, "")
+      message.text = message.text.gsub("<p>", "").gsub("</p>", "")
 
       begin
         case message.text
@@ -49,7 +49,7 @@ module Mumbletune
               collection.user = message.sender.name
 
               # add these tracks to the queue
-              Mumbletune.player.add_collection collection, (play_now) ? true : false
+              Mumbletune.player.add_collection(collection, play_now)
 
               if play_now
                 message.respond_all "#{message.sender.name} is playing #{collection.description} RIGHT NOW."
@@ -64,6 +64,25 @@ module Mumbletune
               else
                 message.respond "Not paused."
               end
+            end
+
+          when /^queue/i
+            if message.argument.length > 0 # user has something to play
+
+              return message.respond "No other songs in queue! Use 'play <Song>'!" unless Mumbletune.player.empty?
+
+              collection = Mumbletune.resolve(message.argument) # This can time out and freeze...
+
+              # handle unknown argument
+              return message.respond "I couldn't find what you wanted me to play. :'(" unless collection
+
+              # associate the collection with a user
+              collection.user = message.sender.name
+
+              # add these tracks to the queue
+              Mumbletune.player.add_collection(collection, false, true)
+
+              message.respond_all "#{message.sender.name} added #{collection.description} to the queue."
             end
 
           when /^pause$/i
@@ -101,8 +120,7 @@ module Mumbletune
               message.respond_all "#{message.sender.name} removed #{removed.description} at #{removed.user} added."
             end
 
-
-          when /^(what|queue)$/i
+          when /^(what)$/i
             queue = Mumbletune.player.queue
             current = Mumbletune.player.current_track
             template_queue = Array.new

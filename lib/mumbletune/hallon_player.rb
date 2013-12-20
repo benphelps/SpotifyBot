@@ -73,7 +73,7 @@ module Mumbletune
     end
 
     # Queue Control
-    def add_collection(col, now=false)
+    def add_collection(col, now=false, queue_command_used=false)
       only_track = empty?
 
       # add to the queue
@@ -87,7 +87,7 @@ module Mumbletune
       @add_history.push col
 
       # play it, if this is the first track or if the user specified `now`
-      self.next if now || only_track
+      self.next if now || only_track && !queue_command_used
     end
 
     def undo

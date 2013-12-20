@@ -27,3 +27,4 @@ tmp/
 .idea/scopes/*.xml
 .idea/inspectionProfiles/*.xml
 .idea/dictionaries/*.xml
+.idea/runConfigurations/*.xml
