@@ -121,20 +121,7 @@ module Mumbletune
             end
 
           when /^(what)$/i
-            queue = Mumbletune.player.queue
-            current = Mumbletune.player.current_track
-            template_queue = Array.new
-            queue.each do |col|
-              template_col = {description: col.description, tracks: Array.new}
-              col.tracks.each { |t| template_col[:tracks] << {name: t.name, artist: t.artist.name, playing?: current == t, username: col.user} }
-              template_queue << template_col
-            end
-
-            # Now, a template.
-            rendered = Mustache.render Message.template[:queue],
-                                       :queue => template_queue,
-                                       :anything? => (queue.empty?) ? false : true
-            message.respond rendered
+            message.respond Mumbletune.player.get_rendered_queue
 
           when /^volume\?$/i
             message.respond "The volume is #{Mumbletune.mumble.volume}."

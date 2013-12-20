@@ -134,10 +134,13 @@ module Mumbletune
       @player.play track
 
       puts "\u266B  #{track.name} - #{track.artist.name}" unless Mumbletune.verbose
+
+      set_queue_comment
     end
 
     def stop
       @player.stop
+      Mumbletune.mumble.set_comment("Nothing is playing. :c")
     end
 
     # Callback Handling
@@ -145,6 +148,28 @@ module Mumbletune
       Mumbletune.mumble.broadcast %w{Mumbletune was just paused because this
 				Spotify account is being used elsewhere. Type <code>unpause
 				</code> to regain control and keep playing.} * " "
+    end
+
+    def set_queue_comment
+
+
+      Mumbletune.mumble.set_comment(get_rendered_queue)
+    end
+
+    def get_rendered_queue
+      queue = Mumbletune.player.queue
+      current = Mumbletune.player.current_track
+      template_queue = Array.new
+      queue.each do |col|
+        template_col = {description: col.description, tracks: Array.new}
+        col.tracks.each { |t| template_col[:tracks] << {name: t.name, artist: t.artist.name, playing?: current == t, username: col.user} }
+        template_queue << template_col
+      end
+
+      # Now, a template.
+       Mustache.render Message.template[:queue],
+                                 :queue => template_queue,
+                                 :anything? => (queue.empty?) ? false : true
     end
 
     private

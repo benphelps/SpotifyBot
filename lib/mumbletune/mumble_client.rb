@@ -72,6 +72,10 @@ module Mumbletune
     def volume=(vol)
       @audio_stream.volume = vol.to_i
     end
+
+    def set_comment(comment)
+      @cli.send_user_state({ comment: comment })
+    end
   end
 
 end
