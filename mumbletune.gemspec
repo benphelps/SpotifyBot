@@ -4,19 +4,19 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'mumbletune/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "mumbletune"
-  spec.version       = Mumbletune::VERSION
-  spec.authors       = ["Elliott Williams"]
-  spec.email         = ["e@elliottwillia.ms"]
-  spec.description   = "Mumbletune connects to a mumble server and allows users to"\
+  spec.name = "mumbletune"
+  spec.version = Mumbletune::VERSION
+  spec.authors = ["Elliott Williams"]
+  spec.email = ["e@elliottwillia.ms"]
+  spec.description = "Mumbletune connects to a mumble server and allows users to"\
                        " interact with and play a queue of music from Spotify."
-  spec.summary       = "A Mumble VOIP bot that plays Spotify."
-  spec.homepage      = "http://github.com/elliottwilliams/mumbletune"
-  spec.license       = "MIT"
+  spec.summary = "A Mumble VOIP bot that plays Spotify."
+  spec.homepage = "http://github.com/elliottwilliams/mumbletune"
+  spec.license = "MIT"
 
-  spec.files         = `git ls-files`.split($/)
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.files = `git ls-files`.split($/)
+  spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.3"

@@ -21,3 +21,7 @@ conf.yaml
 
 spotify_appkey.key
 tmp/
+.idea/mumbletune.iml
+.idea/.*
+.idea/*.xml
+.idea/scopes/*.xml
