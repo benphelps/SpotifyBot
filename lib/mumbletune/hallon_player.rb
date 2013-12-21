@@ -41,6 +41,7 @@ module Mumbletune
       @ready = true
 
       start_event_loop
+      start_comment_check
     end
 
     def disconnect
@@ -151,8 +152,6 @@ module Mumbletune
     end
 
     def set_queue_comment
-
-
       Mumbletune.mumble.set_comment(get_rendered_queue)
     end
 
@@ -180,6 +179,15 @@ module Mumbletune
           @session.process_events unless @session.disconnected?
           sleep 1
         end
+      end
+    end
+
+    def start_comment_check # Simple fix to make sure comment is set
+      Thread.new do
+        if stopped?
+          Mumbletune.mumble.set_comment("Nothing is playing. :c")
+        end
+        sleep 5
       end
     end
 
