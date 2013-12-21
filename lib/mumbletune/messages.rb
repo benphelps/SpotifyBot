@@ -17,6 +17,7 @@ module Mumbletune
       message = Message.new(client, data)
 
       message.text = message.text.gsub("<p>", "").gsub("</p>", "")
+      puts "[Debug] #{message.sender.name} issued bot command: '#{message.text}'"
 
       begin
         case message.text
