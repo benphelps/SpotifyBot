@@ -60,6 +60,7 @@ module Mumbletune
     puts ">> Connected to Mumble server at #{self.config['mumble']['host']}."
     @mumble.stream
     @mumble.set_comment("Nothing is playing. :c")
+    @player.start_comment_check
   end
 
   # shutdown code
