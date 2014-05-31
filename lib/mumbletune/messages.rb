@@ -36,10 +36,11 @@ module Mumbletune
               Thread.new {
                 sleep 5
                 if no_song == nil # Check if setting the collection timed out...
-                  message.respond_all("Something went wrong! Restarting bot!")
-                  exit!
+                  puts "Lost connection to Spotify/Mumble! Stopping!"
+                  `kill -9 #{Process.pid}` # force kill process
                 end
               }
+
               collection = Mumbletune.resolve(message.argument) # This can time out and freeze...
               no_song = "I couldn't find what you wanted me to play. :'("
 
@@ -144,7 +145,7 @@ module Mumbletune
 
           when /^itsfucked$/i
             puts "Force killed by #{message.sender.name}"
-            exit!
+            `kill -9 #{Process.pid}`
 
           else # Unknown command was given.
             rendered = Mustache.render Message.template[:commands],
