@@ -135,7 +135,7 @@ module Mumbletune
 
       puts "\u266B  #{track.name} - #{track.artist.name}" unless Mumbletune.verbose
 
-      set_queue_comment
+      HallonPlayer.set_queue_comment
     end
 
     def stop
