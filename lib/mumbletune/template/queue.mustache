@@ -39,5 +39,10 @@
 {{/anything?}}
 
 {{^anything?}}
-	Nothing is playing. :c
+	<p>Nothing is playing. :c</p>
 {{/anything?}}
+
+{{#locked?}}
+    <br><br>
+    <b>The bot is currently locked and may only be controled by admins.</b>
+{{/locked?}}

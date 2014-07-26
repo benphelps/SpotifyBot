@@ -150,11 +150,11 @@ module Mumbletune
 				</code> to regain control and keep playing.} * " "
     end
 
-    def set_queue_comment
+    def self.set_queue_comment
       Mumbletune.mumble.set_comment(get_rendered_queue)
     end
 
-    def get_rendered_queue
+    def self.get_rendered_queue
       queue = Mumbletune.player.queue
       current = Mumbletune.player.current_track
       template_queue = Array.new
@@ -167,7 +167,8 @@ module Mumbletune
       # Now, a template.
        Mustache.render Message.template[:queue],
                                  :queue => template_queue,
-                                 :anything? => (queue.empty?) ? false : true
+                                 :anything? => (queue.empty?) ? false : true,
+                                 :locked? => Message.locked ? true : false
     end
 
     def start_comment_check # Simple fix to make sure comment is set

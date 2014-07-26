@@ -8,8 +8,10 @@ module Mumbletune
 
     # class methods
 
+    @locked = false
+
     class << self
-      attr_accessor :template
+      attr_accessor :template, :locked
     end
     self.template = Hash.new
 
@@ -20,6 +22,11 @@ module Mumbletune
       puts "[Debug] #{message.sender.name} issued bot command: '#{message.text}'"
 
       begin
+
+        if @locked && !(Array(Mumbletune.config["admins"]).include? message.sender.name)
+          return message.respond "The bot is currently locked, only admins may control it!"
+        end
+
         case message.text
 
           when /^play/i
@@ -147,6 +154,11 @@ module Mumbletune
             puts "Force killed by #{message.sender.name}"
             `kill -9 #{Process.pid}`
 
+          when /^lock$/i
+            @locked = !@locked
+            HallonPlayer.set_queue_comment
+            return message.respond "The bot has been #{@locked ? 'locked' : 'unlocked'}!"
+
           else # Unknown command was given.
             rendered = Mustache.render Message.template[:commands],
                                        :unknown => {:command => message.text}
@@ -165,7 +177,7 @@ module Mumbletune
 
     # instance methods
 
-    attr_accessor :client, :sender, :text, :command, :argument, :words
+  attr_accessor :client, :sender, :text, :command, :argument, :words
 
     def initialize(client, data)
       @client = client

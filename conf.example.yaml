@@ -12,6 +12,10 @@ mumble:
 player:
         default_volume: 60
         tracks_for_artist: 5
+admins:
+        - 'Zachoz'
+        - 'NobleFable'
+        - 'Husk'
 certificate: # Options for generating Mumble certificate
         country_code: "AU"
         organisation: "organisation"
