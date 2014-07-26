@@ -155,9 +155,13 @@ module Mumbletune
             `kill -9 #{Process.pid}`
 
           when /^lock$/i
+            if Array(Mumbletune.config["admins"]).include? message.sender.name
             @locked = !@locked
             HallonPlayer.set_queue_comment
             return message.respond "The bot has been #{@locked ? 'locked' : 'unlocked'}!"
+            else
+              return message.respond "Only admins may lock the bot!"
+            end
 
           else # Unknown command was given.
             rendered = Mustache.render Message.template[:commands],
